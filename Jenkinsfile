@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    dockerimagename = "suraj/nodeapp"
+    dockerimagename = "noddyliger/nodeapp"
     dockerImage = ""
   }
 
