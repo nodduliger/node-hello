@@ -1,5 +1,4 @@
 pipeline {
-
   environment {
     dockerimagename = "noddyliger/nodeapp2"
     dockerImage = ""
@@ -8,7 +7,6 @@ pipeline {
   agent any
 
   stages {
-
     stage('Checkout Source') {
       steps {
         git 'https://github.com/nodduliger/node-hello.git'
@@ -16,7 +14,7 @@ pipeline {
     }
 
     stage('Build image') {
-      steps{
+      steps {
         script {
           dockerImage = docker.build dockerimagename
         }
@@ -25,11 +23,11 @@ pipeline {
 
     stage('Pushing Image') {
       environment {
-               registryCredential = 'dockerhublogin'
-           }
-      steps{
+        registryCredential = 'dockerhublogin'
+      }
+      steps {
         script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+          docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
             dockerImage.push("latest")
           }
         }
@@ -39,11 +37,9 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy(configs: "deployment.yaml" , "service.yaml", kubeconfigId: "kubernetes")
+          kubernetesDeploy(configs: "deployment.yaml", kubeconfigId: "kubernetes", manifests: "service.yaml")
         }
       }
     }
-
   }
-
 }
